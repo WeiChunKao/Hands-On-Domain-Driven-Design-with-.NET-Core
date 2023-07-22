@@ -42,7 +42,7 @@ namespace Marketplace.Domain
             });
 
         public void RequestToPublish() =>
-            Apply(new Events.ClassidiedAdSentForReview {Id = Id});
+            Apply(new Events.ClassidiedAdSentForReview { Id = Id });
 
         protected override void When(object @event)
         {
@@ -70,23 +70,21 @@ namespace Marketplace.Domain
 
         protected override void EnsureValidState()
         {
-            var valid =
-                Id != null &&
-                OwnerId != null &&
-                (State switch
-                {
-                    ClassifiedAdState.PendingReview =>
-                        Title != null
-                        && Text != null
-                        && Price?.Amount > 0,
-                    ClassifiedAdState.Active =>
-                        Title != null
-                        && Text != null
-                        && Price?.Amount > 0
-                        && ApprovedBy != null,
-                    _ => true
-                });
-
+            var valid = State switch
+            {
+                ClassifiedAdState.PendingReview => Id != null
+                                            && OwnerId != null
+                                            && Title != null
+                                            && Text != null
+                                            && Price?.Amount > 0,
+                ClassifiedAdState.Active => Id != null
+                                            && OwnerId != null
+                                            && Title != null
+                                            && Text != null
+                                            && Price?.Amount > 0
+                                            && ApprovedBy != null,
+                _ => true,
+            };
             if (!valid)
                 throw new InvalidEntityStateException(
                     this, $"Post-checks failed in state {State}");

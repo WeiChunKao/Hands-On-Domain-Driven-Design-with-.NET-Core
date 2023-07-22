@@ -8,12 +8,12 @@ namespace Marketplace.Domain
 
         public UserId(Guid value)
         {
-            if (value == default)
+            if (value == Guid.Empty)
                 throw new ArgumentNullException(nameof(value), "User id cannot be empty");
-            
+
             Value = value;
         }
-        
+
         public static implicit operator Guid(UserId self) => self.Value;
     }
 }
