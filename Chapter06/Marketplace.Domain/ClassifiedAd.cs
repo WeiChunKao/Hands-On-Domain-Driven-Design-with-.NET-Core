@@ -71,22 +71,23 @@ namespace Marketplace.Domain
 
         protected override void EnsureValidState()
         {
+            var b = State switch
+            {
+                ClassifiedAdState.PendingReview =>
+                    Title != null
+                    && Text != null
+                    && Price?.Amount > 0,
+                ClassifiedAdState.Active =>
+                    Title != null
+                    && Text != null
+                    && Price?.Amount > 0
+                    && ApprovedBy != null,
+                _ => true
+            };
             var valid =
                 Id != null &&
                 OwnerId != null &&
-                (State switch
-                {
-                    ClassifiedAdState.PendingReview =>
-                        Title != null
-                        && Text != null
-                        && Price?.Amount > 0,
-                    ClassifiedAdState.Active =>
-                        Title != null
-                        && Text != null
-                        && Price?.Amount > 0
-                        && ApprovedBy != null,
-                    _ => true
-                });
+                b;
 
             if (!valid)
                 throw new InvalidEntityStateException(

@@ -86,11 +86,8 @@ namespace Marketplace.Domain.ClassifiedAd
 
         public void ResizePicture(PictureId pictureId, PictureSize newSize)
         {
-            var picture = FindPicture(pictureId);
-            if (picture == null)
-                throw new InvalidOperationException(
+            var picture = FindPicture(pictureId) ?? throw new InvalidOperationException(
                     "Cannot resize a picture that I don't have");
-
             picture.Resize(newSize);
         }
 

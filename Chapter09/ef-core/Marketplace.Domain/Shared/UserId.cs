@@ -11,7 +11,7 @@ namespace Marketplace.Domain.Shared
 
         public UserId(Guid value)
         {
-            if (value == default)
+            if (value == Guid.Empty)
                 throw new ArgumentNullException(nameof(value), "User id cannot be empty");
             
             Value = value;

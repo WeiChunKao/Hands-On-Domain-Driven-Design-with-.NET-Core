@@ -10,7 +10,7 @@ namespace Marketplace
     public static class Program
     {
         static Program() =>
-            CurrentDirectory = Path.GetDirectoryName(GetEntryAssembly().Location);
+            CurrentDirectory = Path.GetDirectoryName(GetEntryAssembly()?.Location);
 
         public static void Main(string[] args)
         {

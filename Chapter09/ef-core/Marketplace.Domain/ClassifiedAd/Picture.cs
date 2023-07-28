@@ -6,11 +6,7 @@ namespace Marketplace.Domain.ClassifiedAd
     public class Picture : Entity<PictureId>
     {
         // Properties to handle the persistence
-        public Guid PictureId
-        {
-            get => Id.Value;
-            set {}
-        }
+        public Guid PictureId => Id.Value;
         
         protected Picture() {}
         

@@ -58,14 +58,14 @@ namespace Marketplace.Domain
             );
 
         public void RequestToPublish() =>
-            Apply(new Events.ClassidiedAdSentForReview {Id = Id});
+            Apply(new Events.ClassidiedAdSentForReview { Id = Id });
 
         public void AddPicture(Uri pictureUri, PictureSize size)
         {
             Apply(
                 new Events.PictureAddedToAClassifiedAd
                 {
-                    PictureId = new Guid(),
+                    PictureId = Guid.NewGuid(),
                     ClassifiedAdId = Id,
                     Url = pictureUri.ToString(),
                     Height = size.Height,
@@ -83,12 +83,12 @@ namespace Marketplace.Domain
         public void ResizePicture(PictureId pictureId, PictureSize newSize)
         {
             var picture = FindPicture(pictureId);
-            if (picture == null)
+            if (picture != null)
+                picture.Resize(newSize);
+            else
                 throw new InvalidOperationException(
                     "Cannot resize a picture that I don't have"
                 );
-
-            picture.Resize(newSize);
         }
 
         protected override void When(object @event)
@@ -136,24 +136,25 @@ namespace Marketplace.Domain
 
         protected override void EnsureValidState()
         {
+            var hasCorrectSize = State switch
+            {
+                ClassifiedAdState.PendingReview =>
+                    Title != null
+                    && Text != null
+                    && Price?.Amount > 0
+                    && FirstPicture.HasCorrectSize(),
+                ClassifiedAdState.Active =>
+                    Title != null
+                    && Text != null
+                    && Price?.Amount > 0
+                    && FirstPicture.HasCorrectSize()
+                    && ApprovedBy != null,
+                _ => true
+            };
             var valid =
                 Id != null &&
                 OwnerId != null &&
-                (State switch
-                {
-                    ClassifiedAdState.PendingReview =>
-                        Title != null
-                        && Text != null
-                        && Price?.Amount > 0
-                        && FirstPicture.HasCorrectSize(),
-                    ClassifiedAdState.Active =>
-                        Title != null
-                        && Text != null
-                        && Price?.Amount > 0
-                        && FirstPicture.HasCorrectSize()
-                        && ApprovedBy != null,
-                    _ => true
-                });
+                hasCorrectSize;
 
             if (!valid)
                 throw new InvalidEntityStateException(this, $"Post-checks failed in state {State}");

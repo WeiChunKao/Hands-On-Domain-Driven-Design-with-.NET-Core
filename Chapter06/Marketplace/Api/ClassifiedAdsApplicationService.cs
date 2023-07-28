@@ -80,14 +80,18 @@ namespace Marketplace.Api
             var classifiedAd = await _repository.Load(
                 classifiedAdId.ToString()
             );
-            if (classifiedAd == null)
+            if (classifiedAd != null)
+            {
+                operation(classifiedAd);
+
+                await _repository.Save(classifiedAd);
+            }
+            else
+            {
                 throw new InvalidOperationException(
                     $"Entity with id {classifiedAdId} cannot be found"
                 );
-
-            operation(classifiedAd);
-
-            await _repository.Save(classifiedAd);
+            }
         }
     }
 }

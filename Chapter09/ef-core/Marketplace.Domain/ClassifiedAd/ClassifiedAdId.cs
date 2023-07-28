@@ -11,7 +11,7 @@ namespace Marketplace.Domain.ClassifiedAd
 
         public ClassifiedAdId(Guid value)
         {
-            if (value == default)
+            if (value == Guid.Empty)
                 throw new ArgumentNullException(nameof(value), "Classified Ad id cannot be empty");
             
             Value = value;

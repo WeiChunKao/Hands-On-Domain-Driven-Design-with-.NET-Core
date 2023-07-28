@@ -6,6 +6,8 @@ namespace Marketplace.Domain
 {
     public class ClassifiedAdTitle : Value<ClassifiedAdTitle>
     {
+        //Satisfy the serialization requirements
+        protected ClassifiedAdTitle(){}
         public static ClassifiedAdTitle FromString(string title)
         {
             CheckValidity(title);

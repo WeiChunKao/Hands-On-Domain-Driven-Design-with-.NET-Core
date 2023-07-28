@@ -15,6 +15,8 @@ namespace Marketplace.Domain
         public UserId ApprovedBy { get; private set; }
         public List<Picture> Pictures { get; }
 
+        private string DbId => $"ClassifiedAdId/{Id.Value}";
+        
         public ClassifiedAd(ClassifiedAdId id, UserId ownerId)
         {
             Pictures = new List<Picture>();

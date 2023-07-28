@@ -31,8 +31,12 @@ namespace Marketplace
         {
             var store = new DocumentStore
               {
-                  Urls = new[] {"http://localhost:8080"},
+                  Urls = new[] {"http://192.168.182.182:8080"},
                   Database = "Marketplace_Chapter8",
+                  Conventions =
+                  {
+                      FindIdentityProperty = x =>x.Name=="DbId"
+                  }
               };
             store.Initialize();
 
